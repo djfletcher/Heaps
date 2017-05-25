@@ -1,25 +1,36 @@
 class MaxHeap
   def self.build_max_heap(arr)
-
-    Heap.new(arr)
+    # only need to heapify from middle of array to beginning
+    # because every element after n/2 is a leaf
+    heap = Heap.new(arr)
+    (heap.size / 2).downto(0) { |i| max_heapify(i) }
+    heap
   end
 
-  attr_reader :heap
-
-  def initialize(arr)
-    @heap = arr
+  def initialize(array)
+    # underlying data structure for heap will be implemented as an array
+    @array = array
   end
 
   def [](idx)
-    @heap[idx]
+    @array[idx]
   end
 
   def []=(idx, val)
-    @heap[idx] = val
+    @array[idx] = val
+  end
+
+  def ==(other_heap)
+    return false if self.size != other_heap.size
+    @array.size.times do |i|
+      return false if self[i] != other_heap[i]
+    end
+
+    true
   end
 
   def size
-    @heap.size
+    @array.size
   end
 
   def max_heapify(idx)
@@ -58,12 +69,6 @@ class MaxHeap
   end
 end
 
-
-def build_max_heap(arr)
-
-end
-
-
 def max(heap)
   heap.first
 end
@@ -81,4 +86,4 @@ end
 
 test_heap = MaxHeap.new([6, 9, 8, 4, 7, 3, 2])
 test_heap.max_heapify(0)
-puts test_heap.heap == [9, 7, 8, 4, 6, 3, 2]
+puts test_heap == [9, 7, 8, 4, 6, 3, 2]
