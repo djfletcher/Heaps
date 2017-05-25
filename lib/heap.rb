@@ -7,9 +7,12 @@ class MaxHeap
     heap
   end
 
+  attr_reader :size
+
   def initialize(array)
     # underlying data structure for heap will be implemented as an array
     @array = array
+    @size = array.size
   end
 
   def [](idx)
@@ -22,15 +25,11 @@ class MaxHeap
 
   def ==(other_heap)
     return false if self.size != other_heap.size
-    @array.size.times do |i|
+    @size.times do |i|
       return false if self[i] != other_heap[i]
     end
 
     true
-  end
-
-  def size
-    @array.size
   end
 
   def max_heapify(idx)
@@ -67,18 +66,22 @@ class MaxHeap
     right = (left == self.size - 1) ? nil : left + 1
     [left, right]
   end
-end
 
-def max(heap)
-  heap.first
-end
+  def extract_max!
+    return nil if @size == 0
+    max = @array.first
+    @array[0], @array[size - 1] = @array[size - 1], @array[0]
+    @size -= 1
+    max_heapify(0)
+    max
+  end
 
-def extract_max(heap)
-
-end
-
-def insert(heap, el)
-
+  def insert(el)
+    # dregs = @array[size..-1]
+    # @array[size] = el
+    # @array = @array[0..size] + dregs
+    # @size += 1
+  end
 end
 
 
@@ -87,3 +90,7 @@ end
 test_heap = MaxHeap.new([6, 9, 8, 4, 7, 3, 2])
 test_heap.max_heapify(0)
 puts test_heap == [9, 7, 8, 4, 6, 3, 2]
+puts test_heap.extract_max! == 9
+puts test_heap == [8, 7, 3, 4, 6, 2]
+# test_heap.insert(9)
+# puts test_heap == [9, 7, 8, 4, 6, 3, 2]
