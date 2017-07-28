@@ -13,6 +13,10 @@ class Heap {
     return { left: 2 * (i + 1) - 1, right: 2 * (i + 1) };
   }
 
+  peek() {
+    return this.heap[0];
+  }
+
   swap(idx1, idx2) {
     if (idx1 >= this.heap.length || idx2 >= this.heap.length) {
       throw "Index out of bounds";
@@ -24,11 +28,26 @@ class Heap {
   }
 }
 
-class MaxHeap extends Heap {  
+class MaxHeap extends Heap {
+  insert(val) {
+    this.heap.push(val);
+    this.heapifyUp(val, this.heap.length - 1);
+  }
+
+  extract() {
+    if (this.heap.length === 0) {
+      return undefined;
+    }
+    this.swap(0, this.heap.length - 1);
+    let val = this.heap.pop();
+    this.heapifyDown(this.heap[0], 0);
+    return val;
+  }
+
   heapifyUp(val, idx) {
     let parentIdx = this.parentIndex(idx);
     if (this.heap[parentIdx] < val) {
-      super.swap(idx, parentIdx);
+      this.swap(idx, parentIdx);
       this.heapifyUp(val, parentIdx);
     }
   }
@@ -43,17 +62,17 @@ class MaxHeap extends Heap {
         max = childIndices.right;
       }
       if (val < this.heap[max]) {
-        super.swap(idx, max);
+        this.swap(idx, max);
         this.heapifyDown(val, max);
       }
     } else if (childIndices.left < this.heap.length) {
       if (val < this.heap[childIndices.left]) {
-        super.swap(idx, childIndices.left);
+        this.swap(idx, childIndices.left);
         this.heapifyDown(val, childIndices.left);
       }
     } else if (childIndices.right < this.heap.length) {
       if (val < this.heap[childIndices.right]) {
-        super.swap(idx, childIndices.right);
+        this.swap(idx, childIndices.right);
         this.heapifyDown(val, childIndices.right);
       }
     }
@@ -64,7 +83,23 @@ class MaxHeap extends Heap {
 
 
 let h = new MaxHeap;
-// h.heap = [5, 3, 4, 4]
+h.insert(3)
+h.insert(5)
+h.insert(4)
+h.insert(6)
+h.insert(-15)
+h.insert(0)
+h.insert(1000)
+console.log(h.heap);
+console.log(h.extract());
+console.log(h.extract());
+console.log(h.extract());
+console.log(h.extract());
+console.log(h.extract());
+console.log(h.extract());
+console.log(h.extract());
+console.log(h.extract());
+// h.heap = [5, 3, 4, 6]
 // console.log(h.heap);
-// h.heapifyUp(4, 3);
+// h.heapifyUp(6, 3);
 // console.log(h.heap);
