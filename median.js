@@ -12,10 +12,59 @@ class Heap {
   childIndices(i) {
     return { left: 2 * (i + 1) - 1, right: 2 * (i + 1) };
   }
+
+  swap(idx1, idx2) {
+    if (idx1 >= this.heap.length || idx2 >= this.heap.length) {
+      throw "Index out of bounds";
+    }
+    let val1 = this.heap[idx1];
+    let val2 = this.heap[idx2];
+    this.heap[idx1] = val2;
+    this.heap[idx2] = val1;
+  }
 }
 
-let h = new Heap;
-console.log(h.parentIndex(2));
-console.log(h.parentIndex(5));
-console.log(h.childIndices(0));
-console.log(h.childIndices(2));
+class MaxHeap extends Heap {  
+  heapifyUp(val, idx) {
+    let parentIdx = this.parentIndex(idx);
+    if (this.heap[parentIdx] < val) {
+      super.swap(idx, parentIdx);
+      this.heapifyUp(val, parentIdx);
+    }
+  }
+
+  heapifyDown(val, idx) {
+    let childIndices = this.childIndices(idx);
+    if (childIndices.left < this.heap.length && childIndices.right < this.heap.length) {
+      let max;
+      if (this.heap[childIndices.left] > this.heap[childIndices.right]) {
+        max = childIndices.left;
+      } else {
+        max = childIndices.right;
+      }
+      if (val < this.heap[max]) {
+        super.swap(idx, max);
+        this.heapifyDown(val, max);
+      }
+    } else if (childIndices.left < this.heap.length) {
+      if (val < this.heap[childIndices.left]) {
+        super.swap(idx, childIndices.left);
+        this.heapifyDown(val, childIndices.left);
+      }
+    } else if (childIndices.right < this.heap.length) {
+      if (val < this.heap[childIndices.right]) {
+        super.swap(idx, childIndices.right);
+        this.heapifyDown(val, childIndices.right);
+      }
+    }
+  }
+}
+
+
+
+
+let h = new MaxHeap;
+// h.heap = [5, 3, 4, 4]
+// console.log(h.heap);
+// h.heapifyUp(4, 3);
+// console.log(h.heap);
