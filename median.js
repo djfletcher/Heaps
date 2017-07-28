@@ -26,9 +26,7 @@ class Heap {
     this.heap[idx1] = val2;
     this.heap[idx2] = val1;
   }
-}
 
-class MaxHeap extends Heap {
   insert(val) {
     this.heap.push(val);
     this.heapifyUp(val, this.heap.length - 1);
@@ -44,6 +42,27 @@ class MaxHeap extends Heap {
     return val;
   }
 
+  heapifyUp(val, idx) {
+    let parentIdx = this.parentIndex(idx);
+    if (idx > 0) {
+      this.swap(idx, parentIdx);
+      this.heapifyUp(val, parentIdx);
+    }
+  }
+
+  heapifyDown(val, idx) {
+    let childIndices = this.childIndices(idx);
+    if (childIndices.left < this.heap.length) {
+      this.swap(idx, childIndices.left);
+      this.heapifyDown(val, childIndices.left);
+    } else if (childIndices.right < this.heap.length) {
+      this.swap(idx, childIndices.right);
+      this.heapifyDown(val, childIndices.right);
+    }
+  }
+}
+
+class MaxHeap extends Heap {
   heapifyUp(val, idx) {
     let parentIdx = this.parentIndex(idx);
     if (this.heap[parentIdx] < val) {
@@ -79,10 +98,46 @@ class MaxHeap extends Heap {
   }
 }
 
+class MinHeap extends Heap {
+  heapifyUp(val, idx) {
+    let parentIdx = this.parentIndex(idx);
+    if (this.heap[parentIdx] > val) {
+      this.swap(idx, parentIdx);
+      this.heapifyUp(val, parentIdx);
+    }
+  }
+
+  heapifyDown(val, idx) {
+    let childIndices = this.childIndices(idx);
+    if (childIndices.left < this.heap.length && childIndices.right < this.heap.length) {
+      let min;
+      if (this.heap[childIndices.left] < this.heap[childIndices.right]) {
+        min = childIndices.left;
+      } else {
+        min = childIndices.right;
+      }
+      if (val > this.heap[min]) {
+        this.swap(idx, min);
+        this.heapifyDown(val, min);
+      }
+    } else if (childIndices.left < this.heap.length) {
+      if (val > this.heap[childIndices.left]) {
+        this.swap(idx, childIndices.left);
+        this.heapifyDown(val, childIndices.left);
+      }
+    } else if (childIndices.right < this.heap.length) {
+      if (val > this.heap[childIndices.right]) {
+        this.swap(idx, childIndices.right);
+        this.heapifyDown(val, childIndices.right);
+      }
+    }
+  }
+}
 
 
 
-let h = new MaxHeap;
+
+let h = new MinHeap;
 h.insert(3)
 h.insert(5)
 h.insert(4)
